@@ -39,7 +39,10 @@ class Album extends Component {
             </tbody>
          </table>
 
-
+         {this.state.albums.map( (album, index) =>
+            <div>{album.songs}</div>
+            )
+          }
 
        </section>
 
