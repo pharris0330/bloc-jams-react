@@ -14,7 +14,8 @@ class Album extends Component {
             this.state = {
               album: album,
               currentSong: album.songs[0],
-              isPlaying: false
+              isPlaying: false,
+              hover: null
             };
 
             this.audioElement = document.createElement('audio');
@@ -46,25 +47,24 @@ class Album extends Component {
      }
    }
 
-   hoverOn(song){
-     this.setState({hover: song});
+   hoverOn (song) {
+     this.setState ({hover:song});
    }
 
-   hoverOff(song){
-     this.setState({hover:null});
+   hoverOff (song) {
+     this.setState ({hover:null});
    }
-
-button(song, index){
-  if(this.state.currentSong === song && this.state.isPlaying === true){
-    <span className ="icon ion-md-pause"></span>
-  }
-else if(this.state.hover === song){
-    <span className ="icon ion-md-play"></span>
-}
-else{
-  return index + 1;
-}
-}
+   button (song, index) {
+     if (this.state.currentSong === song && this.state.isPlaying){
+       return <span className="icon ion-md-pause"></span>
+    }
+    else if (this.state.hover === song) {
+       return <span className="icon ion-md-play"></span>
+        }
+     else {
+       return (index + 1)
+        }
+    }
 
 
    render() {
@@ -85,19 +85,19 @@ else{
               <col id="song-duration-column" />
             </colgroup>
             <tbody>
-          {this.state.album.songs.map((song, index) =>
-          <tr className="song" key={index} onClick={() => this.handleSongClick(song)}>
-            <td
-            onMouseEnter={() => this.hoverOn(song)}
-            onMouseLeave={() => this.hoverOff(song)}>
-            {this.button(song, index)}
-            </td>
-            <td>{song.title}</td>
-            <td>{song.duration}</td>
-          </tr>
-        )
-      }
-      </tbody>
+        {this.state.album.songs.map((song, index) =>
+        <tr className="song" key={index} onClick={() => this.handleSongClick(song)}>
+          <td
+          onMouseEnter={() => this.hoverOn(song)}
+          onMouseLeave={() => this.hoverOff(song)}>
+          {this.button(song, index)}
+          </td>
+          <td>{song.title}</td>
+          <td>{song.duration}</td>
+        </tr>
+      )
+    }
+        </tbody>
          </table>
          <PlayerBar />
 
