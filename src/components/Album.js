@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import albumData from './../data/albums';
+import PlayerBar from './PlayerBar';
 
 class Album extends Component {
   constructor(props) {
@@ -13,7 +14,8 @@ class Album extends Component {
             this.state = {
               album: album,
               currentSong: album.songs[0],
-              isPlaying: false
+              isPlaying: false,
+              hover: null
             };
 
             this.audioElement = document.createElement('audio');
@@ -45,6 +47,24 @@ class Album extends Component {
      }
    }
 
+   hoverOn (song) {
+     this.setState ({hover:song});
+   }
+
+   hoverOff (song) {
+     this.setState ({hover:null});
+   }
+   button (song, index) {
+     if (this.state.currentSong === song && this.state.isPlaying){
+       return <span className="icon ion-md-pause"></span>
+    }
+    else if (this.state.hover === song) {
+       return <span className="icon ion-md-play"></span>
+        }
+     else {
+       return (index + 1)
+        }
+    }
 
 
    render() {
@@ -65,18 +85,21 @@ class Album extends Component {
               <col id="song-duration-column" />
             </colgroup>
             <tbody>
-            <tbody>
         {this.state.album.songs.map((song, index) =>
-        <tr className="song" key={index} onClick={() => this.handleSongClick(song)} >
-          <td>{index + 1 + '.'}</td>
-          <td id="song-title">{song.title}</td>
-          <td id="song-duration">{song.duration}</td>
+        <tr className="song" key={index} onClick={() => this.handleSongClick(song)}>
+          <td
+          onMouseEnter={() => this.hoverOn(song)}
+          onMouseLeave={() => this.hoverOff(song)}>
+          {this.button(song, index)}
+          </td>
+          <td>{song.title}</td>
+          <td>{song.duration}</td>
         </tr>
       )
     }
         </tbody>
-            </tbody>
          </table>
+         <PlayerBar />
 
 
 
