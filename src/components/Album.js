@@ -16,8 +16,8 @@ class Album extends Component {
               currentSong: album.songs[0],
               isPlaying: false,
               currentTime: 0,
+              currentVolume: 0.8,
               duration: album.songs[0].duration,
-              hover: null
             };
 
             this.audioElement = document.createElement('audio');
@@ -39,18 +39,24 @@ class Album extends Component {
        timeupdate: e => {
          this.setState({ currentTime: this.audioElement.currentTime });
        },
+       volumeupdate: e => {
+         this.setState({ currentVolume: this.audioElement.currentVolume });
+       },
        durationchange: e => {
          this.setState({ duration: this.audioElement.duration });
        }
      };
      this.audioElement.addEventListener('timeupdate', this.eventListeners.timeupdate);
      this.audioElement.addEventListener('durationchange', this.eventListeners.durationchange);
+     this.audioElement.addEventListener('volumeupdate', this.eventListeners.volumeupdate);
    }
 
    componentWillUnmount() {
      this.audioElement.src = null;
      this.audioElement.removeEventListener('timeupdate', this.eventListeners.timeupdate);
      this.audioElement.removeEventListener('durationchange', this.eventListeners.durationchange);
+     this.audioElement.removeEventListener('volumeupdate', this.eventListeners.volumeupdate);
+
    }
 
    setSong(song) {
@@ -90,6 +96,13 @@ class Album extends Component {
      this.setState({ currentTime: newTime });
    }
 
+   handleVolumeChange(e) {
+     const newVolume = e.target.value;
+     this.audioElement.currentVolume = newVolume;
+     this.setState({ currentVolume: newVolume });
+   }
+
+
    hoverOn(song){
      this.setState({hover: song});
    }
@@ -110,24 +123,6 @@ else{
 }
 }
 
-   hoverOn (song) {
-     this.setState ({hover:song});
-   }
-
-   hoverOff (song) {
-     this.setState ({hover:null});
-   }
-   button (song, index) {
-     if (this.state.currentSong === song && this.state.isPlaying){
-       return <span className="icon ion-md-pause"></span>
-    }
-    else if (this.state.hover === song) {
-       return <span className="icon ion-md-play"></span>
-        }
-     else {
-       return (index + 1)
-        }
-    }
 
 
    render() {
@@ -170,25 +165,15 @@ else{
                     handlePrevClick={() => this.handlePrevClick()}
                     handleNextClick={() => this.handleNextClick()}
                     currentTime={this.audioElement.currentTime}
+                    currentVolume={this.audioElement.currentVolume}
                     duration={this.audioElement.duration}
                     handleTimeChange={(e) => this.handleTimeChange(e)}
+                    handleVolumeChange={(e) => this.handleVolumeChange(e)}
+
                   />
 
-        {this.state.album.songs.map((song, index) =>
-        <tr className="song" key={index} onClick={() => this.handleSongClick(song)}>
-          <td
-          onMouseEnter={() => this.hoverOn(song)}
-          onMouseLeave={() => this.hoverOff(song)}>
-          {this.button(song, index)}
-          </td>
-          <td>{song.title}</td>
-          <td>{song.duration}</td>
-        </tr>
-      )
-    }
-        </tbody>
-         </table>
-         <PlayerBar />
+
+
 
 
 
