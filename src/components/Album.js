@@ -16,8 +16,9 @@ class Album extends Component {
               currentSong: album.songs[0],
               isPlaying: false,
               currentTime: 0,
-              currentVolume: 0.8,
+              volume: 1.0,
               duration: album.songs[0].duration,
+              hover: null
             };
 
             this.audioElement = document.createElement('audio');
@@ -39,24 +40,23 @@ class Album extends Component {
        timeupdate: e => {
          this.setState({ currentTime: this.audioElement.currentTime });
        },
-       volumeupdate: e => {
-         this.setState({ currentVolume: this.audioElement.currentVolume });
-       },
+       volumechange: e => {
+               this.setState({ volume: this.audioElement.volume });
+},
        durationchange: e => {
          this.setState({ duration: this.audioElement.duration });
        }
-     };
+     }
      this.audioElement.addEventListener('timeupdate', this.eventListeners.timeupdate);
      this.audioElement.addEventListener('durationchange', this.eventListeners.durationchange);
-     this.audioElement.addEventListener('volumeupdate', this.eventListeners.volumeupdate);
+     this.audioElement.addEventListener('volumechange', this.eventListeners.volumechange);
    }
 
    componentWillUnmount() {
      this.audioElement.src = null;
      this.audioElement.removeEventListener('timeupdate', this.eventListeners.timeupdate);
      this.audioElement.removeEventListener('durationchange', this.eventListeners.durationchange);
-     this.audioElement.removeEventListener('volumeupdate', this.eventListeners.volumeupdate);
-
+     this.audioElement.removeEventListener('volumechange', this.eventListeners.volumechange);
    }
 
    setSong(song) {
@@ -97,10 +97,10 @@ class Album extends Component {
    }
 
    handleVolumeChange(e) {
-     const newVolume = e.target.value;
-     this.audioElement.currentVolume = newVolume;
-     this.setState({ currentVolume: newVolume });
-   }
+  const newVolume = e.target.value;
+  this.audioElement.volume = newVolume
+  this.setState({ volume: newVolume});
+}
 
 
    hoverOn(song){
@@ -124,6 +124,19 @@ else{
 }
 
 
+    formatTime(time) {
+        const minutes = Math.floor(time/60);
+        let seconds = Math.floor(time-minutes*60);
+        if (seconds < 10) {
+          seconds = "0" + seconds
+        }
+        if (time == undefined){
+          return "-:--";
+        }
+        else {
+          return minutes + ":" + seconds;
+        }
+      }
 
    render() {
      return (
@@ -152,7 +165,8 @@ else{
             {this.button(song, index)}
             </td>
             <td>{song.title}</td>
-            <td>{song.duration}</td>
+            <td>{this.formatTime(song.duration)}</td>
+            <td>{this.props.formatTime}</td>
           </tr>
         )
       }
@@ -161,22 +175,16 @@ else{
          <PlayerBar
                     isPlaying={this.state.isPlaying}
                     currentSong={this.state.currentSong}
+                    volume={this.audioElement.volume}
                     handleSongClick={() => this.handleSongClick(this.state.currentSong)}
                     handlePrevClick={() => this.handlePrevClick()}
                     handleNextClick={() => this.handleNextClick()}
                     currentTime={this.audioElement.currentTime}
-                    currentVolume={this.audioElement.currentVolume}
                     duration={this.audioElement.duration}
+                    formatTime={(time) => this.formatTime(time)}
                     handleTimeChange={(e) => this.handleTimeChange(e)}
                     handleVolumeChange={(e) => this.handleVolumeChange(e)}
-
                   />
-
-
-
-
-
-
        </section>
 
 
