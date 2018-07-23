@@ -22,6 +22,54 @@
   font-size: large;
 }
 
+#album-title {
+  font-size: 1.5em;
+  color: purple;
+  border-style: solid;
+}
+
+#release-info {
+  font-size: 1.5em;
+  color: purple;
+  border-style: solid;
+}
+
+.App {
+  color:purple;
+}
+
+.artist {
+  font-size: 1.5em;
+  color: purple;
+  border-style: solid;
+}
+
+#time-control {
+  color: purple;
+}
+
+#library {
+  font-style: oblique;
+  font-size: 2.5em;
+}
+
+#song-list{
+  color: purple;
+}
+
+.library{
+  font-size: 1.5em;
+  font-style: italic;
+}
+
+#album-cover{
+  width: 15%;
+}
+
+#album-cover-art{
+  width: 20%;
+}
+
 @keyframes App-logo-spin {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
